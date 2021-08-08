@@ -14,9 +14,8 @@ long double power ();
 int factorial ();
 int **matrix_sum();
 int **matrix_multiply();
-float squareroot();
-long double cubicRoot();
-long double diff();
+double multiply();
+double getNthRoot();
 void calculator_operations ();
 
 /* main () - It is the function from where the program starts getting executed. In this function “choice_operation” of char type is declared. Then the function calculator_operation () is called. Then, through scanf () user choice for the case label is accepted which is stored in “choice_operation” variable. Finally, the switch is executed. */
@@ -135,21 +134,16 @@ int main ()
                                 }
                         break;
             
-            case 'r':;  int number;
-                        float squrt;
-                        printf("Enter the Number: \n");
-                        scanf("%d", &number);
-                        squrt=squareroot(number);
-                        printf("The square root of %d if %f",number,squrt);
+            case 'r':;  int no, mo;
+	                    double result;
+	                    printf("Enter the root\n");
+	                    scanf("%d",&no);
+	                    printf("Enter the Number\n");
+	                    scanf("%d",&mo);
+	                    result=getNthRoot(no, mo); 
+	                    printf("The result is %lf",result);
                         break;
             
-            case 'c':;  long double nnn,aaa;
-	                    printf("Enter the Number\n");
-	                    scanf("%Lf",&nnn);
-	                    aaa=cubicRoot(nnn);
-	                    printf("Cubic root of %Lf is %Lf\n",nnn, aaa); 
-                        break;
-
             case 'Q': exit (0);
                       break;
                       
@@ -179,8 +173,7 @@ void calculator_operations ()
     printf ("Enter! symbol for Factorial \n");
     printf ("Enter s for Matrix Sum \n");
     printf ("Enter m for Matrix Multiplication \n");
-    printf ("Enter r for Square Root \n");
-    printf ("Enter c for Cube Root \n");
+    printf ("Enter r for Nth Root \n");
 }
 
 /* addition () - variable “n”, “i” of int type is declared ,"total->0","number" of long double type is declared and a pointer variable "* ptr" is declared of long double type. Then, the user is asked to enter the number of operands they want to add and dynamically space is created .Using the for loop the operands are accepted one by one and again using the for loop the sum is calculated one by one of each element in the array and is stored in "total" .The result stored in “total” is returned. */
@@ -346,43 +339,36 @@ int **matrix_multiply(int matrix1[][100], int matrix2[][100])
   return multiply;
 }
 
-/*long double diff() - this function returns "(n-(mid*mid*mid))" if "n" is more than "mid*mid*mid" else it will return "(mid*mid*mid) - n" */
-long double diff(long double n,long double mid)
+
+/*double multiply() - Variable "ans->1.0" of double type is declared. This function finds out the power of the variable "number" to "n" using for loop and the result is stored in "ans"  which is then returned */
+double multiply(double number, int n) 
 {
-	if (n > (mid*mid*mid))
-		return (n-(mid*mid*mid));
-	else
-		return ((mid*mid*mid) - n);
+    double ans = 1.0;
+    for(int i = 1;i<=n;i++) 
+    {
+        ans = ans * number;
+    }
+    return ans; 
 }
 
-/*long double cubicRoot() - variable "start->0", "end->n", "e->0.0000001" of type long double declared. An infinite running while loop is run.In it "mid" of long double type stores the average of "start" and "end". "error" of long double type stores the retured value of diff() function. If "error" is less than or equal to "e"  "mid" is returned */
-long double cubicRoot(long double n)
+/*double getNthRoot() - Variable "low->1", "high->m" and "eps->1e-6" of double type is declared. Now a while loop first checks whether "high"-"low" is greater than "eps".Inside the while loop variable "mid" of double type  stores the average of "low" and "high". With a if statement it is checked whether "multiply(mid, n)" is less than "m" and if it is less than "m"   "low" stores "mid" else "high" stores "mid". The variable "high" is returned*/
+double getNthRoot(int n, int m) 
 {
-	long double start = 0, end = n;
-	long double e = 0.0000001;
-    while (1)
-	{
-		long double mid = (start + end)/2;
-		long double error = diff(n, mid);
-		if (error <= e)
-			return mid;
-		if ((mid*mid*mid) > n)
-			end = mid;
-		else
-			start = mid;
-	}
-}
-
-/*squareroot()- variable "squrt" of float type and "temp" of int type  declared. "squrt" stores the half of "number". A while loop is placed whick confirms that "squrt" not equal to "temp". Then squrt is returned*/
-float squareroot(int number)
-{
-    float squrt;
-    squrt = number / 2;
-    int temp = 0;
-    while(squrt != temp)
-       {
-         temp = squrt;
-         squrt = ( number/temp + temp) / 2;
-       }
-    return squrt;
+    double low = 1;
+    double high = m;
+    double eps = 1e-6; 
+    
+    while((high - low) > eps) 
+    {
+        double mid = (low + high) / 2.0; 
+        if(multiply(mid, n) < m) 
+        {
+            low = mid; 
+        }
+        else 
+        {
+            high = mid; 
+        }
+    }
+    return high;
 }
